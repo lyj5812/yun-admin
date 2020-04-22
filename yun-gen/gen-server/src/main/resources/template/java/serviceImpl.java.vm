@@ -1,0 +1,34 @@
+package ${table.packageName}.service.impl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ${table.packageName}.mapper.${table.className}Mapper;
+import ${table.packageName}.domain.${table.className};
+import ${table.packageName}.service.${table.className}Service;
+
+/**
+ * ${table.tableComment} ServiceImpl
+ * 
+ * @author ${table.author}
+ * @date ${datetime}
+ */
+@Service
+public class ${table.className}ServiceImpl extends ServiceImpl<${table.className}Mapper, ${table.className}> implements ${table.className}Service {
+
+    @Autowired
+    private ${table.className}Mapper ${table.businessName}Mapper;
+
+    /**
+     * 查询分页列表
+     * @param page 分页参数
+     * @param ${table.businessName}
+     * @return 分页数据
+     */
+    @Override
+    public IPage<${table.className}> select$strUtil.upperFirst(${table.businessName})ListPage(Page page, ${table.className} ${table.businessName}) {
+        return ${table.businessName}Mapper.select$strUtil.upperFirst(${table.businessName})ListPage(page,${table.businessName});
+    }
+
+}

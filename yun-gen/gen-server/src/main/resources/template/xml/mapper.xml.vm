@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${table.packageName}.mapper.${table.className}Mapper">
+    
+    <resultMap type="${table.packageName}.domain.${table.className}" id="${table.businessName}Result">
+#foreach ($column in $table.columns)
+        <result column="${column.columnName}" property="${column.columnCamelName}"  />
+#end
+    </resultMap>
+
+    <sql id="select${table.className}">
+        select#foreach($column in $table.columns) $column.columnName#if($velocityCount != $table.columns.size()),#end#end from ${table.tableName}
+    </sql>
+
+</mapper>

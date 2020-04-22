@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyj.admin.system.mapper.SysNoticeMapper">
+    
+    <resultMap type="com.lyj.admin.system.domain.SysNotice" id="noticeResult">
+        <result column="create_by" property="createBy"  />
+        <result column="notice_content" property="noticeContent"  />
+        <result column="update_by" property="updateBy"  />
+        <result column="create_time" property="createTime"  />
+        <result column="remark" property="remark"  />
+        <result column="update_time" property="updateTime"  />
+        <result column="notice_title" property="noticeTitle"  />
+        <result column="notice_id" property="noticeId"  />
+        <result column="status" property="status"  />
+        <result column="notice_type" property="noticeType"  />
+    </resultMap>
+
+    <sql id="selectSysNotice">
+        select create_by, notice_content, update_by, create_time, remark, update_time, notice_title, notice_id, status, notice_type from sys_notice
+    </sql>
+
+</mapper>

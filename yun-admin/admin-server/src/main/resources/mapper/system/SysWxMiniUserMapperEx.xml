@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyj.admin.system.mapper.SysWxMiniUserMapper">
+    
+    <select id="selectSysWxMiniUserListPage" resultMap="sysWxMiniUserResult">
+        <include refid="selectSysWxMiniUser"/>
+        <where>
+        <if test="sysWxMiniUser.nickName != null  and sysWxMiniUser.nickName != ''">
+            and nick_name like concat('%', #{sysWxMiniUser.nickName}, '%')
+        </if>
+        <if test="sysWxMiniUser.avatarUrl != null  and sysWxMiniUser.avatarUrl != ''">
+            and avatar_url = #{sysWxMiniUser.avatarUrl}
+        </if>
+        <if test="sysWxMiniUser.mobile != null  and sysWxMiniUser.mobile != ''">
+            and mobile = #{sysWxMiniUser.mobile}
+        </if>
+        <if test="sysWxMiniUser.openId != null  and sysWxMiniUser.openId != ''">
+            and open_id = #{sysWxMiniUser.openId}
+        </if>
+        <if test="sysWxMiniUser.subscribe != null  and sysWxMiniUser.subscribe != ''">
+            and subscribe = #{sysWxMiniUser.subscribe}
+        </if>
+        <if test="sysWxMiniUser.province != null  and sysWxMiniUser.province != ''">
+            and province = #{sysWxMiniUser.province}
+        </if>
+        <if test="sysWxMiniUser.city != null  and sysWxMiniUser.city != ''">
+            and city = #{sysWxMiniUser.city}
+        </if>
+        <if test="sysWxMiniUser.county != null  and sysWxMiniUser.county != ''">
+            and county = #{sysWxMiniUser.county}
+        </if>
+        <if test="sysWxMiniUser.email != null  and sysWxMiniUser.email != ''">
+            and email = #{sysWxMiniUser.email}
+        </if>
+        <if test="sysWxMiniUser.gender != null  and sysWxMiniUser.gender != ''">
+            and gender = #{sysWxMiniUser.gender}
+        </if>
+        <if test="sysWxMiniUser.birthday != null ">
+            and birthday = #{sysWxMiniUser.birthday}
+        </if>
+        </where>
+    </select>
+
+</mapper>

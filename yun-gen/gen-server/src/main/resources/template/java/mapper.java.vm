@@ -1,0 +1,23 @@
+package ${table.packageName}.mapper;
+import ${table.packageName}.domain.${table.className};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * ${table.tableComment} Mapper
+ * 
+ * @author ${table.author}
+ * @date ${datetime}
+ */
+public interface ${table.className}Mapper extends BaseMapper<${table.className}>{
+
+    /**
+     * 查询分页列表
+     * @param page 分页参数
+     * @param ${table.tableCamelName}
+     * @return 分页数据
+     */
+    IPage<${table.className}> select$strUtil.upperFirst(${table.businessName})ListPage(Page page, @Param("${table.businessName}") ${table.className} ${table.businessName});
+}

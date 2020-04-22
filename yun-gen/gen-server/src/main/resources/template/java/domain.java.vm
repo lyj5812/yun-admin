@@ -1,0 +1,32 @@
+package ${table.packageName}.domain;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.lyj.common.po.BaseEntity;
+import lombok.Data;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#foreach ($import in $importList)
+import ${import};
+#end
+
+/**
+ * <p>
+ * ${table.tableComment} 实体
+ * </p>
+ *
+ * @author ${table.author}
+ * @date ${datetime}
+ */
+@Data
+@ApiModel("${table.tableComment}实体")
+public class ${table.className} extends BaseEntity {
+#foreach ($column in $table.columns)
+#if(!$column.superColumn)
+
+#if($column.isPriKey)
+    @TableId(value = "$column.columnName",#if($column.isIncrement) type = IdType.AUTO #end)
+#end
+    @ApiModelProperty("${column.columnComment}")
+    private $column.javaType $column.columnCamelName;
+#end
+#end
+}

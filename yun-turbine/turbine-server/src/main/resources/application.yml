@@ -1,0 +1,16 @@
+server:
+  port: 8031
+spring:
+  application:
+    name: turbine-server
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 47.52.79.108:9092
+eureka:
+  client:
+    server-url:
+      defaultZone: http://132.232.17.78:8081/eureka/
+  instance:
+    prefer-ip-address: true

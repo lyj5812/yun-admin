@@ -1,0 +1,22 @@
+-- 菜单 SQL
+insert into sys_menu (name, parent_id, order_num, path, menu_type, hidden, perms, icon, component, create_by, create_time, update_by, update_time, remark)
+values('${table.functionName}', '1', '1', '/${table.moduleName}/${table.businessName}', '0', '0', '${table.moduleName}:${table.businessName}:view', '#','/${table.moduleName}/${table.businessName}/index', '1', '${datetime}', '1', '${datetime}', '${table.functionName}');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu  (name, parent_id, order_num, path, menu_type, hidden, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${table.functionName}查询', @parentId, '1',  '#',  '1', '0', '${table.moduleName}:${table.businessName}:search',         '#', '1', '${datetime}', '1', '${datetime}', '');
+
+insert into sys_menu  (name, parent_id, order_num, path, menu_type, hidden, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${table.functionName}新增', @parentId, '2',  '#',  '1', '0', '${table.moduleName}:${table.businessName}:add',          '#', '1', '${datetime}', '1', '${datetime}', '');
+
+insert into sys_menu  (name, parent_id, order_num, path, menu_type, hidden, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${table.functionName}修改', @parentId, '3',  '#',  '1', '0', '${table.moduleName}:${table.businessName}:edit',         '#', '1', '${datetime}', '1', '${datetime}', '');
+
+insert into sys_menu  (name, parent_id, order_num, path, menu_type, hidden, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${table.functionName}删除', @parentId, '4',  '#',  '1', '0', '${table.moduleName}:${table.businessName}:del',       '#', '1', '${datetime}', '1', '${datetime}', '');
+
+insert into sys_menu  (name, parent_id, order_num, path, menu_type, hidden, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('${table.functionName}导出', @parentId, '5',  '#',  '1', '0', '${table.moduleName}:${table.businessName}:export',       '#', '1', '${datetime}', '1', '${datetime}', '');

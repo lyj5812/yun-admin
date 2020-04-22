@@ -1,0 +1,25 @@
+import request from '@/utils/request'
+
+export function ${table.businessName}ListPage(data) {
+  return request({
+    url: '/admin-server/${table.businessName}/listPage',
+    method: 'get',
+    params: data
+  })
+}
+
+export function addOrEdit(data) {
+  return request({
+    url: '/admin-server/${table.businessName}/addOrEdit',
+    method: 'put',
+    data
+  })
+}
+
+export function delList(data) {
+  return request({
+    url: '/admin-server/${table.businessName}/delByIds',
+    method: 'delete',
+    data
+  })
+}

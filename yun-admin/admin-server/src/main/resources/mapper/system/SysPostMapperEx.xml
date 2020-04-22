@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyj.admin.system.mapper.SysPostMapper">
+    <select id="getPostIdsByUserId" parameterType="Long" resultType="Long">
+		SELECT
+            p.post_id
+        FROM
+            sys_user u
+            LEFT JOIN sys_user_post up ON u.user_id = up.user_id
+            LEFT JOIN sys_post p ON up.post_id = p.post_id
+        WHERE
+            up.user_id = #{userId}
+            and p.del_flag=0
+	</select>
+
+    <select id="selectPostListPage" resultMap="BaseResultMap">
+		SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            sys_post t
+        WHERE
+            t.del_flag =0
+        <if test="post.postCode != null and post.postCode != ''">
+			AND t.post_code like concat('%', #{post.postCode}, '%')
+		</if>
+		<if test="post.status != null and post.status != ''">
+			AND t.status = #{post.status}
+		</if>
+		<if test="post.postName != null and post.postName != ''">
+			AND t.post_name like concat('%', #{post.postName}, '%')
+		</if>
+	</select>
+</mapper>

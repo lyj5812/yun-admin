@@ -1,0 +1,116 @@
+version: '2'
+services:
+  yun-mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/yun-mysql:latest
+    container_name: yun-mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./yun-mysql:/var/lib/mysql
+  redis:
+    image: redis:5.0.0
+    container_name: redis
+    command: redis-server --requirepass 123456
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data
+  nacos-server:
+    depends_on:
+      - yun-mysql
+    restart: always
+    container_name: nacos-server
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/yun-nacos:latest
+    ports:
+      - 8848:8848
+    entrypoint: bash bin/wait-for-it.sh yun-mysql:3306 -t 600 --
+    command: bin/docker-startup.sh
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_MASTER_SERVICE_HOST: yun-mysql
+      MYSQL_MASTER_SERVICE_PORT: 3306
+      MYSQL_MASTER_SERVICE_DB_NAME: nacos
+      MYSQL_MASTER_SERVICE_USER: lyj
+      MYSQL_MASTER_SERVICE_PASSWORD: 123456
+      MYSQL_SLAVE_SERVICE_HOST: yun-mysql
+      MYSQL_SLAVE_SERVICE_PORT: 3306
+  admin-server:
+    depends_on:
+      - yun-mysql
+      - nacos-server
+      - redis
+    restart: always
+    container_name: admin-server
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/admin-server:latest
+    ports:
+      - 8030:8030
+    entrypoint: ./wait-for-it.sh yun-mysql:3306 -t 600 -- ./wait-for-it.sh nacos-server:8848 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+    environment:
+      NACOS-HOST: nacos-server
+      AUTH-HOST: auth-server
+      ENV-ACTIVE: prod
+  auth-server:
+    depends_on:
+      - yun-mysql
+      - redis
+      - nacos-server
+      - admin-server
+    restart: always
+    container_name: auth-server
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/auth-server:latest
+    ports:
+      - 8040:8040
+    entrypoint: ./wait-for-it.sh yun-mysql:3306 -t 600 -- ./wait-for-it.sh nacos-server:8848 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+    environment:
+      NACOS-HOST: nacos-server
+      AUTH-HOST: auth-server
+      ENV-ACTIVE: prod
+  gateway-server:
+    depends_on:
+      - yun-mysql
+      - nacos-server
+      - admin-server
+      - auth-server
+    restart: always
+    container_name: gateway-server
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/gateway-server:latest
+    ports:
+      - 8050:8050
+    entrypoint: ./wait-for-it.sh yun-mysql:3306 -t 600 -- ./wait-for-it.sh nacos-server:8848 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+    environment:
+      NACOS-HOST: nacos-server
+      AUTH-HOST: auth-server
+      ENV-ACTIVE: prod
+  gen-server:
+    depends_on:
+      - yun-mysql
+      - nacos-server
+      - admin-server
+      - auth-server
+    restart: always
+    container_name: gen-server
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/gen-server:latest
+    ports:
+      - 8070:8070
+    entrypoint: ./wait-for-it.sh nacos-server:8848 -t 600 --
+    command: java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+    environment:
+      NACOS-HOST: nacos-server
+      AUTH-HOST: auth-server
+      ENV-ACTIVE: prod
+  admin-ui:
+    depends_on:
+      - nacos-server
+      - admin-server
+      - auth-server
+      - gateway-server
+    restart: always
+    container_name: admin-ui
+    image: registry.cn-hangzhou.aliyuncs.com/yun-admin/yun-admin-ui:latest
+    ports:
+      - 80:80

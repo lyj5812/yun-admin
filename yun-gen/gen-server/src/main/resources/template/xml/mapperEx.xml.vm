@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${table.packageName}.mapper.${table.className}Mapper">
+    
+    <select id="select${table.businessName}ListPage" resultMap="${table.businessName}Result">
+        <include refid="select${table.className}"/>
+        <where>
+            del_flag =0
+#foreach($column in $table.columns)
+#set($queryType=$column.queryType)
+#set($columnCamelName=${table.businessName}+'.'+$column.columnCamelName)
+#set($javaType=$column.javaType)
+#set($columnName=$column.columnName)
+#if($column.isQuery)
+#if($column.queryType == "EQ")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName = #{$columnCamelName}
+        </if>
+#elseif($queryType == "NE")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName != #{$columnCamelName}
+        </if>
+#elseif($queryType == "GT")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName &gt; #{$columnCamelName}
+        </if>
+#elseif($queryType == "GTE")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName &gt;= #{$columnCamelName}
+        </if>
+#elseif($queryType == "LT")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName &lt; #{$columnCamelName}
+        </if>
+#elseif($queryType == "LTE")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName &lt;= #{$columnCamelName}
+        </if>
+#elseif($queryType == "LIKE")
+        <if test="$columnCamelName != null #if($javaType == 'String' ) and $columnCamelName.trim() != ''#end">
+            and $columnName like concat('%', #{$columnCamelName}, '%')
+        </if>
+#end
+#end
+#end
+        </where>
+    </select>
+
+</mapper>

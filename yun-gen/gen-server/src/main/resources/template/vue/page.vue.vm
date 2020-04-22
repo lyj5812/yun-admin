@@ -1,0 +1,394 @@
+<template>
+  <v-container>
+    <v-card class="br-6 box-shadow mt-3 pt-5">
+      <v-card-title class="b-left">${table.functionName}</v-card-title>
+      <v-card-text>
+        <v-data-table
+          v-model="selected"
+          :headers="th"
+          :items="${table.businessName}Page.records"
+          hide-default-footer
+          disable-pagination
+          show-select
+          item-key="${table.primaryKey}"
+          :loading="dataFlag"
+          loading-text="加载中... 请稍后！"
+        >
+          <template v-if="${table.businessName}Page.records&&${table.businessName}Page.records.length===0" v-slot:body>
+            <td :colspan="th.length+1">
+              <v-row justify="center">
+                <v-img max-height="200" class="ma-4" max-width="200" :src="require('@/assets/img/no-data.svg')" />
+              </v-row>
+            </td>
+          </template>
+          <template v-slot:top>
+            <v-row>
+              <v-col cols="auto" class="mr-auto">
+                <v-btn x-small fab color="success" @click="${table.businessName}ListPageData">
+                  <v-icon dark>mdi-sync</v-icon>
+                </v-btn>
+                <v-btn
+                  v-perms="['${table.moduleName}:${table.businessName}:add']"
+                  class="ml-2"
+                  x-small
+                  fab
+                  color="primary"
+                  @click="addOrEdit({})"
+                >
+                  <v-icon dark>add</v-icon>
+                </v-btn>
+                <v-btn
+                  v-perms="['${table.moduleName}:${table.businessName}:export']"
+                  x-small
+                  fab
+                  color="info"
+                  class="ml-2"
+                  :disabled="selected.length<1"
+                  @click="exportExcel()"
+                >
+                  <v-icon dark>mdi-export-variant</v-icon>
+                </v-btn>
+                <v-btn
+                  v-perms="['${table.moduleName}:${table.businessName}:edit']"
+                  x-small
+                  fab
+                  color="warning"
+                  class="ml-2"
+                  :disabled="selected.length!=1"
+                  @click="addOrEdit(selected[0])"
+                >
+                  <v-icon dark>edit</v-icon>
+                </v-btn>
+                <v-btn
+                  v-perms="['${table.moduleName}:${table.businessName}:del']"
+                  x-small
+                  fab
+                  color="error"
+                  class="ml-2"
+                  :disabled="selected.length<1"
+                  @click="delList(selected)"
+                >
+                  <v-icon dark>delete</v-icon>
+                </v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn v-perms="['${table.moduleName}:${table.businessName}:search']" small text color="primary" dark @click="filterFlag=!filterFlag">
+                  筛选
+                  <v-icon dark>{{ filterFlag?'mdi-chevron-double-up':'mdi-chevron-double-down' }}</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-divider />
+            <v-expand-transition>
+              <div v-show="filterFlag">
+                <v-row class="py-5" dense>
+#foreach ($column in $table.columns)
+#if($column.isQuery)
+#if($column.vueType == "input")
+                  <v-col cols="12" xs="12" lg="2">
+                    <v-text-field
+                      v-model="page.$column.columnCamelName"
+                      label="$column.columnComment"
+                      dense
+                      outlined
+                      clearable
+                      hide-details
+                    />
+                  </v-col>
+#elseif($column.vueType == "select" && $column.dictType)
+                  <v-col cols="12" xs="12" lg="2">
+                    <dict
+                      v-model="page.$column.columnCamelName"
+                      outlined
+                      dense
+                      dict-type="$column.dictType"
+                    />
+                  </v-col>
+#elseif($column.vueType == "select")
+                  <v-col cols="12" xs="12" sm="12" lg="2">
+                    <v-select
+                      v-model="page.$column.columnCamelName"
+                      :items="[]"
+                      outlined
+                      dense
+                      :menu-props="{ offsetY: true }"
+                      hide-details
+                    />
+                  </v-col>
+#elseif($column.vueType == "datetime")
+                  <v-col cols="12" xs="12" sm="12" lg="2">
+                    <y-date-picker
+                      ref="date"
+                      v-model="page.$column.columnCamelName"
+                      outlined
+                      clearable
+                      label="$column.columnComment"
+                      prepend-inner-icon="event"
+                      dense
+                    >
+                      <v-spacer />
+                      <v-btn text color="primary" @click="$refs.date.menu=false">确认</v-btn>
+                    </y-date-picker>
+                  </v-col>
+#end
+#end
+#end
+                  <v-col cols="12" xs="12" sm="12" lg="1" offset-xs="9">
+                    <v-btn v-perms="['${table.moduleName}:${table.businessName}:search']" color="primary" dark @click="${table.businessName}ListPageData">
+                      <v-icon dark>search</v-icon>
+                      搜索
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-divider />
+              </div>
+            </v-expand-transition>
+          </template>
+          <template v-slot:item.status="{ item }">
+            {{ item.status==0?'正常':'停用' }}
+          </template>
+          <template v-slot:item.handle="{ item }">
+            <v-btn v-perms="['${table.moduleName}:${table.businessName}:edit']" fab x-small class="ma-1" color="success" @click="addOrEdit(item)">
+              <v-icon dark>edit</v-icon>
+            </v-btn>
+            <v-btn v-perms="['${table.moduleName}:${table.businessName}:del']" fab x-small class="ma-1" color="error" @click="delList([item])">
+              <v-icon dark>delete</v-icon>
+            </v-btn>
+          </template>
+        </v-data-table>
+        <pagination
+          :page-sizes="[10,20]"
+          :page-data="${table.businessName}Page"
+          @pageChange="${table.businessName}ListPage"
+        />
+      </v-card-text>
+    </v-card>
+    <!--${table.functionName}添加修改-->
+    <v-form ref="${table.businessName}" :model="${table.businessName}">
+      <v-dialog v-model="editFlag" persistent max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">{{ ${table.businessName}.${table.primaryKey}?'修改${table.functionName}':'添加${table.functionName}' }}</span>
+            <v-spacer />
+            <v-btn class="mx-0" icon @click.stop="editFlag = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text>
+            <v-row class="mt-4" no-gutters>
+#foreach ($column in $table.columns)
+#if($column.isEdit)
+#if($column.vueType == "input")
+              <v-col cols="12" xs="12">
+                <v-text-field
+                  v-model="${table.businessName}.$column.columnCamelName"
+                  dense
+                  outlined
+#if(!$column.isRequired)
+                  class="ml-4"
+#end
+                  clearable
+#if($column.isRequired)
+                  :rules="[v => !!v || '请输入$column.columnComment!']"
+#end
+                  label="$column.columnComment"
+                #if(!$column.isRequired)/#end>
+#if($column.isRequired)
+                  <template v-slot:prepend>
+                    <small class="red--text my-3">*</small>
+                  </template>
+                </v-text-field>
+#end
+              </v-col>
+#elseif($column.vueType == "select" && $column.dictType)
+              <v-col cols="12" xs="12">
+                <dict
+                  v-model="${table.businessName}.$column.columnCamelName"
+                  outlined
+#if(!$column.isRequired)
+                  class="ml-4"
+#end
+                  dense
+                  dict-type="$column.dictType"
+                />
+              </v-col>
+#elseif($column.vueType == "select")
+              <v-col cols="12" xs="12">
+                <v-select
+                  v-model="${table.businessName}.$column.columnCamelName"
+                  :items="[]"
+#if(!$column.isRequired)
+                  class="ml-4"
+#end
+                  outlined
+                  label="$column.columnComment"
+                  dense
+                  :menu-props="{ offsetY: true }"
+                />
+              </v-col>
+#elseif($column.vueType == "datetime")
+              <v-col cols="12" xs="12">
+                <y-date-picker
+                  ref="date"
+                  v-model="${table.businessName}.$column.columnCamelName"
+                  outlined
+#if(!$column.isRequired)
+                  field-class="ml-4"
+#end
+                  clearable
+                  label="$column.columnComment"
+                  prepend-inner-icon="event"
+                  dense
+                >
+                  <v-spacer />
+                  <v-btn text color="primary" @click="$refs.date.menu=false">
+                    确认
+                  </v-btn>
+                </y-date-picker>
+              </v-col>
+#elseif($column.vueType == "textarea")
+              <v-col cols="12" xs="12">
+                <v-textarea
+                  v-model="${table.businessName}.$column.columnCamelName"
+                  outlined
+#if(!$column.isRequired)
+                  class="ml-4"
+#end
+                  label="$column.columnComment"
+                />
+              </v-col>
+#end
+#end
+#end
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn small color="success" @click="addOrEditSubmit()">
+              <v-icon dark>done</v-icon>
+              提交
+            </v-btn>
+            <v-btn small color="secondary" class="ml-2" @click="editFlag=false">
+              <v-icon dark>close</v-icon>
+              取消
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-form>
+  </v-container>
+</template>
+
+<script>
+import { addOrEdit, ${table.businessName}ListPage, delList } from '@/api/${table.moduleName}/${table.businessName}'
+
+export default {
+  data() {
+    return {
+      ${table.businessName}Page: {},
+      ${table.businessName}: {},
+      selected: [], // 选中的行
+      editFlag: false,
+      dataFlag: false,
+      filterFlag: false,
+      th: [
+#foreach ($column in $table.columns)
+#if($column.isList)
+        { text: '$column.columnComment', align: 'center', sortable: true, value: '$column.columnCamelName' },
+#end
+#end
+        { text: '操作', align: 'center', sortable: false, value: 'handle' }
+      ],
+      page: {
+        current: 1,
+        size: 10
+      }
+
+    }
+  },
+  mounted() {
+    this.${table.businessName}ListPage(this.page)
+  },
+  methods: {
+    /**
+      * ${table.tableComment}分页数据
+      */
+    ${table.businessName}ListPage(page) {
+      this.page.size = page.size
+      this.page.current = page.current
+      this.${table.businessName}ListPageData()
+    },
+    /**
+     * ${table.tableComment}分页数据接口
+     */
+    ${table.businessName}ListPageData() {
+      this.dataFlag = true
+      ${table.businessName}ListPage(this.page).then(res => {
+        this.${table.businessName}Page = res.data.data
+        this.dataFlag = false
+      })
+    },
+    /**
+     * 打开模态框
+     */
+    addOrEdit(${table.businessName}) {
+      this.${table.businessName} = ${table.businessName}
+      if (!this.${table.businessName}.${table.primaryKey}) {
+        this.$refs.${table.businessName}.resetValidation()
+      }
+      this.editFlag = true
+    },
+#set($refs="$refs")
+#set($message="$message")
+#set($confirm="$confirm")
+    /**
+     * 添加或者修改提交
+     * @returns {boolean}
+     */
+    addOrEditSubmit() {
+      if (this.${refs}.${table.businessName}.validate()) {
+        addOrEdit(this.${table.businessName}).then(res => {
+          if (res.data.code === 200) {
+            this.${message}.success(res.data.msg)
+            this.editFlag = false
+            this.${table.businessName}ListPageData()
+          } else {
+            this.${message}.error(res.data.msg)
+          }
+        })
+      } else {
+        console.log('error submit!!')
+        return false
+      }
+    },
+    delList(${table.businessName}s) {
+      this.${confirm}.fire({
+        title: '操作确认?',
+        text: '删除后，您将无法恢复!',
+        icon: 'warning'
+      }).then((result) => {
+        if (result.value) {
+          const ids = ${table.businessName}s.map((n) => { return n.${table.primaryKey} })
+          delList(ids).then(res => {
+            if (res.data.code === 200) {
+              this.${confirm}.fire(
+                '删除成功!',
+                '您要删除的已删除.',
+                'success'
+              )
+              this.${table.businessName}ListPageData()
+            } else {
+              this.${message}.error(res.data.msg)
+            }
+          })
+        }
+      })
+    },
+    /**
+      * 导出excel
+      */
+    exportExcel() {
+    }
+  }
+}
+</script>

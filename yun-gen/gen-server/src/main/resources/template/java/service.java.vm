@@ -1,0 +1,25 @@
+package ${table.packageName}.service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${table.packageName}.domain.${table.className};
+import java.util.List;
+
+/**
+ * ${table.className} Service
+ * 
+ * @author ${table.author}
+ * @date ${datetime}
+ */
+public interface ${table.className}Service extends IService<${table.className}>{
+
+    /**
+     * 查询分页列表
+     * 
+     * @param page 分页参数
+     * @param ${table.tableCamelName}
+     * @return 分页数据
+     */
+    IPage<${table.className}> select$strUtil.upperFirst(${table.businessName})ListPage(Page page, ${table.className} ${table.tableCamelName});
+
+}

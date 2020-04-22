@@ -1,0 +1,36 @@
+server:
+  port: 8040
+spring:
+  profiles:
+    active: ${ENV-ACTIVE:dev}
+
+---
+# 开发环境配置
+spring:
+  profiles: dev
+  application:
+    name: auth-server # 对应获取的配置文件的{application}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS-HOST:nacos-host}:8848
+        file-extension: yaml
+        shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+      discovery:
+        server-addr: ${NACOS-HOST:nacos-host}:8848
+---
+# 生产环境配置
+spring:
+  profiles: prod
+  application:
+    name: auth-server # 对应config server所获取的配置文件的{application}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS-HOST:nacos-host}:8848
+        file-extension: yaml
+        shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+        namespace: 6c330126-7080-45b8-8374-9d334d7903be
+      discovery:
+        server-addr: ${NACOS-HOST:nacos-host}:8848
+        namespace: 6c330126-7080-45b8-8374-9d334d7903be

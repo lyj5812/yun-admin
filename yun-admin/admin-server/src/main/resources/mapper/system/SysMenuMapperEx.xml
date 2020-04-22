@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyj.admin.system.mapper.SysMenuMapper">
+
+    <select id="selectMenusByUserId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT DISTINCT
+            m.menu_id,
+            m.parent_id,
+            m.name,
+            m.path,
+            m.perms,
+            m.menu_type,
+            m.hidden,
+            m.component,
+            m.icon,
+            m.order_num,
+            m.create_time
+        FROM
+            sys_menu m
+            LEFT JOIN sys_role_menu rm ON m.menu_id = rm.menu_id
+            LEFT JOIN sys_user_role ur ON rm.role_id = ur.role_id
+            LEFT JOIN sys_role ro ON ur.role_id = ro.role_id
+        WHERE
+            ur.user_id = #{userId}
+            AND m.menu_type = 0
+            AND ro.STATUS = 0
+            AND m.del_flag = 0
+        ORDER BY
+            m.order_num
+	</select>
+
+    <select id="selectBtnPermissionsByUserId" parameterType="Long" resultType="String">
+		SELECT
+            m.perms
+        FROM
+            sys_menu m
+            LEFT JOIN sys_role_menu rm ON m.menu_id = rm.menu_id
+            LEFT JOIN sys_user_role ur ON rm.role_id = ur.role_id
+            LEFT JOIN sys_role ro ON ur.role_id = ro.role_id
+        WHERE
+            ur.user_id = #{userId}
+            AND m.menu_type = 1
+            AND ro.STATUS = 0
+            AND m.del_flag = 0
+        ORDER BY
+            m.order_num
+	</select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyj.admin.system.mapper.SysUserMapper">
+
+    <select id="selectUserListPage" resultMap="BaseResultMap">
+		SELECT
+            u.user_id,
+            u.dept_id,
+            u.username,
+            u.real_name,
+            u.email,
+            u.avatar,
+            u.phonenumber,
+            u.sex,
+            u.salt,
+            u.status,
+            u.del_flag,
+            u.login_ip,
+            u.login_date,
+            u.create_by,
+            u.create_time,
+            u.remark
+        FROM
+            sys_user u
+        WHERE
+            u.del_flag = '0'
+		<if test="user.username != null and user.username != ''">
+			AND u.username like concat('%', #{user.username}, '%')
+		</if>
+		<if test="user.status != null and user.status != ''">
+			AND u.status = #{user.status}
+		</if>
+		<if test="user.phonenumber != null and user.phonenumber != ''">
+			AND u.phonenumber like concat('%', #{user.phonenumber}, '%')
+		</if>
+		<if test="user.deptId != null and user.deptId != 0">
+			and u.dept_id in( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET ( #{user.deptId},CONCAT(t.dept_id,',',ancestors)))
+		</if>
+	</select>
+</mapper>
