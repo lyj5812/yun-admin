@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.lyj.constants.SecurityConstants;
 import com.lyj.pojo.R;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -19,13 +20,17 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class AuthFilter implements GlobalFilter {
+
+    @Value("${isPreview:false}")
+    private boolean isPreview;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         //防止外部注入签名
         exchange.getRequest().mutate()
                 .headers(httpHeaders -> httpHeaders.remove(SecurityConstants.AUTH_INNER_KEY))
                 .build();
-        if (exchange.getRequest().getMethod().equals(HttpMethod.GET) || exchange.getRequest().getMethod().equals(HttpMethod.POST)) {
+        if (!isPreview && (exchange.getRequest().getMethod().equals(HttpMethod.GET) || exchange.getRequest().getMethod().equals(HttpMethod.POST))) {
             //成功
             return chain.filter(exchange);
         }
