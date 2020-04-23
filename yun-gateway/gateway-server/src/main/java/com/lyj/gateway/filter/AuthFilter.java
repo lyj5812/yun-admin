@@ -30,7 +30,7 @@ public class AuthFilter implements GlobalFilter {
         exchange.getRequest().mutate()
                 .headers(httpHeaders -> httpHeaders.remove(SecurityConstants.AUTH_INNER_KEY))
                 .build();
-        if (!isPreview && (exchange.getRequest().getMethod().equals(HttpMethod.GET) || exchange.getRequest().getMethod().equals(HttpMethod.POST))) {
+        if (!isPreview || (exchange.getRequest().getMethod().equals(HttpMethod.GET) || exchange.getRequest().getMethod().equals(HttpMethod.POST))) {
             //成功
             return chain.filter(exchange);
         }
