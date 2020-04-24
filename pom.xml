@@ -12,7 +12,6 @@
         <module>yun-common</module>
         <module>yun-gen</module>
         <module>yun-gateway</module>
-        <module>yun-turbine</module>
         <module>yun-auth</module>
     </modules>
     <packaging>pom</packaging>
