@@ -7,7 +7,7 @@
 
 - [在线预览](https://yun-admin.cn)
 
-- [gitee](https://gitee.com/lyj1995/yun-admin)
+- [gitee](https://gitee.com/lyj5812/yun-admin)
 
 - [使用文档](https://yun-admin.cn/docs)
 
@@ -52,36 +52,32 @@
 **项目结构** 
 ```
 Yun-Admin
-├─doc  
-│  ├─db.sql 项目SQL语句
-│  ├─nginx.confi nginx 配置文件
-│  ├─updateLog 更新日志
-├─authentication 权限认证
-├─common 公共模块
-│  ├─annotation 自定义注解
-│  ├─aspect 系统日志
-│  ├─base base包
-│  ├─exception 异常处理
-│  ├─utils 一些工具类
-│  ├─validator 后台校验
-│  └─xss XSS过滤
-│ 
-├─config 配置信息
-├─interceptor token拦截器
-│ 
-├─modules 功能模块
-│  ├─app API接口模块(APP调用)
-│  ├─oss 文件服务模块
-│  ├─sys 权限模块
-│  ├─apkversion APK 版本管理
-│  └─gen 代码生成
-│ 
-├─Application 项目启动类
-├─Swagger2 swagger2类
-│  
-├──resources 
-│  ├─mapper SQL对应的XML文件
-
+├─docker-compose  
+│  ├─docker-compose.yml docker-compose部署配置文件
+├─mysql  
+│  ├─Dockerfile
+│  ├─my.cnf mysql配置文件(已有mysql的无需关注)
+│  ├─nacos.sql nacos sql文件
+│  ├─privileges.sql mysql权限sql文件(已有mysql的无需关注)
+│  ├─yun-admin.sql yun-admin sql文件
+├─nacos nacos 加入wait-for-it.sh,自己安装nacos的无需关注
+├─yun-admin 后台管理模块
+│  ├─admin-client 后台feign和数据模型
+│  ├─admin-dao 后台dao和实体类
+│  ├─admin-server 后台服务
+├─yun-auth 鉴权模块
+│  ├─auth-server 鉴权服务中心
+├─yun-common 通用模块
+│  ├─common-cache-data 数据缓存模块
+│  ├─common-core 通用核心模块
+│  ├─common-framework framework模块
+│  ├─common-upload 文件上传模块
+│  ├─common-wx-ma 微信小程序模块
+│  ├─common-wx-mp 微信公众模块
+├─yun-gateway 网关模块
+│  ├─gateway-server 网关服务
+├─yun-gen 代码生成模块
+│  ├─gen-server 代码生成服务
 
 ```
 **开发环境** 
