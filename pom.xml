@@ -46,7 +46,7 @@
         <beanutils.vs>1.9.3</beanutils.vs>
         <oauth2.vs>2.1.2.RELEASE</oauth2.vs>
         <commons-lang3.vs>3.8.1</commons-lang3.vs>
-        <commons-io.vs>2.6</commons-io.vs>
+        <commons-io.vs>2.7</commons-io.vs>
         <fastjson.vs>1.2.56</fastjson.vs>
         <nacos.vs>0.9.0.RELEASE</nacos.vs>
         <hutool.vs>5.0.3</hutool.vs>
