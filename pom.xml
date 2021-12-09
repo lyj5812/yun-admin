@@ -30,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.vs>1.8</java.vs>
         <spring-cloud.vs>Greenwich.SR3</spring-cloud.vs>
-        <jackson.vs>2.9.7</jackson.vs>
+        <jackson.vs>2.9.10.8</jackson.vs>
         <feign.vs>2.1.1.RELEASE</feign.vs>
         <mysql-connector-java.vs>8.0.18</mysql-connector-java.vs>
         <mybatis-plus.vs>3.2.0</mybatis-plus.vs>
