@@ -35,7 +35,7 @@
         <mysql-connector-java.vs>8.0.18</mysql-connector-java.vs>
         <mybatis-plus.vs>3.2.0</mybatis-plus.vs>
         <druid.vs>1.1.14</druid.vs>
-        <spring-boot.vs>2.1.9.RELEASE</spring-boot.vs>
+        <spring-boot.vs>2.5.12</spring-boot.vs>
         <velocity.vs>1.7</velocity.vs>
         <swagger2.vs>2.9.2</swagger2.vs>
         <boot-devtools.vs>2.1.1.RELEASE</boot-devtools.vs>
