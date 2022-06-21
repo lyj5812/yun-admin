@@ -32,7 +32,7 @@
         <spring-cloud.vs>Greenwich.SR3</spring-cloud.vs>
         <jackson.vs>2.9.7</jackson.vs>
         <feign.vs>2.1.1.RELEASE</feign.vs>
-        <mysql-connector-java.vs>8.0.18</mysql-connector-java.vs>
+        <mysql-connector-java.vs>8.0.28</mysql-connector-java.vs>
         <mybatis-plus.vs>3.2.0</mybatis-plus.vs>
         <druid.vs>1.1.14</druid.vs>
         <spring-boot.vs>2.1.9.RELEASE</spring-boot.vs>
