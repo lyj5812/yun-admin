@@ -7,9 +7,6 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // Get some code from a GitHub repository
-                git 'https://github.com/lyj5812/yun-admin.git'
-
                 // Run Maven on a Unix agent.
                 sh "mvn clean install -Dmaven.test.skip=true -Pprod"
 
