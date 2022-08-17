@@ -16,8 +16,10 @@ spring:
         server-addr: ${NACOS-HOST:nacos-host}:8848
         file-extension: yaml
         shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+        namespace: ${spring.profiles.active}
       discovery:
         server-addr: ${NACOS-HOST:nacos-host}:8848
+        namespace: ${spring.profiles.active}
 ---
 # 生产环境配置
 spring:
