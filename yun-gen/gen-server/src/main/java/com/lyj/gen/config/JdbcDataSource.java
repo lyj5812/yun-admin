@@ -49,7 +49,7 @@ public class JdbcDataSource extends DruidDataSource {
     }
 
     public synchronized DruidDataSource getDataSource(DataSourceDto dataSource) {
-        String jdbcUrl = "jdbc:mysql://" + dataSource.getHost() + ":" + dataSource.getPort() + "/" + dataSource.getDbName() + "?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false";
+        String jdbcUrl = "jdbc:mysql://" + dataSource.getHost() + ":" + dataSource.getPort() + "/" + dataSource.getDbName() + "?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=false";
         String username = dataSource.getUserName();
         String password = dataSource.getPassword();
         String key = getKey(jdbcUrl, username, password);
